@@ -1,22 +1,23 @@
 local vect = require 'dokidoki.vect'
 
-transform = game.add_component(self, 'dokidoki.transform', {
-  pos = vect(100, 100)
-})
-sprite = game.add_component(self, 'dokidoki.sprite', {
-  scale = vect(10, 10)
-})
+local args = ...
 
-local function wasd_input(w, a, s, d)
-  local dir = vect((d and 1 or 0) - (a and 1 or 0),
-                   (w and 1 or 0) - (s and 1 or 0))
-  return dir ~= vect.zero and vect.norm(dir) or dir
-end
+num = args.input_num
+ship = game.add_component(self, 'ship', {
+  input = game.add_component(self, 'player_input', {num = args.input_num}),
+  pos = args.pos,
+  orientation = args.orientation,
+  color = args.color
+})
+transform = ship.transform
+
+number_display = game.add_component(self, 'number_display', {pnum=args.input_num})
 
 function update()
-  transform.pos = transform.pos + 2 * wasd_input(
-    game.keyboard.key_held(string.byte('W')),
-    game.keyboard.key_held(string.byte('A')),
-    game.keyboard.key_held(string.byte('S')),
-    game.keyboard.key_held(string.byte('D')))
+  local laps_left = 4 - ship.lap
+  number_display.value = laps_left
+  if laps_left <= 0 then
+    game.race_manager.race_over()
+  end
 end
+

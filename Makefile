@@ -54,7 +54,7 @@ $(TARGET_EXE): $(OBJS)
 
 %.o: %.c
 	@echo building $@...
-	$(CC) -MD -o $@ $< -c $(CFLAGS) $($(PLATFORM)_CFLAGS)
+	@$(CC) -MD -o $@ $< -c $(CFLAGS) $($(PLATFORM)_CFLAGS)
 	@cp $*.d $*.P;
 	@sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 	     -e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $*.P
@@ -62,7 +62,7 @@ $(TARGET_EXE): $(OBJS)
 
 %.o: %.cpp
 	@echo building $@...
-	$(CXX) -MD -o $@ $< -c $(CFLAGS) $($(PLATFORM)_CFLAGS)
+	@$(CXX) -MD -o $@ $< -c $(CFLAGS) $($(PLATFORM)_CFLAGS)
 	@cp $*.d $*.P;
 	@sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 	     -e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $*.P

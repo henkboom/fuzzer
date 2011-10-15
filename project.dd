@@ -1,15 +1,60 @@
-PROJECT_NAME := dokidoki-template
+PROJECT_NAME := fuzzer
 
 LIBRARIES += \
     dokidoki
 
 LUA_SRC += \
+    ai_ship_input.lua \
+    audio_source.lua \
+    block.lua \
+    camera.lua \
+    checkpoint.lua \
+    effects.lua \
+    enemy.lua \
+    flare.lua \
     game.lua \
+    goat.lua \
     init.lua \
-    player.lua
+    number_display.lua \
+    player.lua \
+    player_input.lua \
+    pulse.lua \
+    race_manager.lua \
+    resources.lua \
+    ship.lua \
+    ship_renderer.lua \
+    ship_shooting.lua \
+    terrain.lua
 
-C_SRC +=
+C_SRC += \
+    lua_utils.c
 
-LUA_NATIVE_MODULES +=
+CXX_SRC += \
+    collider.cpp \
+    collision.cpp \
+    debug_draw.cpp
 
-RESOURCES +=
+LUA_NATIVE_MODULES += \
+    collider \
+    collision
+
+RESOURCES += \
+    level.png \
+    level_checkpoints.lua \
+    goat.png \
+    numbers.png \
+    sounds/finish_lap.wav \
+    sounds/flash_1.wav \
+    sounds/flash_2.wav \
+    sounds/flash_3.wav \
+    sounds/flash_4.wav \
+    sounds/music.wav \
+    sounds/hit_wall_1.wav \
+    sounds/hit_wall_2.wav \
+    sounds/hit_wall_3.wav \
+    sounds/powerup.wav \
+    sounds/shoot_player_1.wav \
+    sounds/shoot_player_2.wav \
+    sounds/win.wav \
+    sounds/engine_loop_1.wav \
+    sounds/engine_loop_2.wav

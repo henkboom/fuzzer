@@ -2,18 +2,20 @@ local stb_image = require 'stb_image'
 local vect = require 'dokidoki.vect'
 local quaternion = require 'dokidoki.quaternion'
 local gl = require 'gl'
+local audio_source = require 'audio_source'
+
+-- just for now, soon I'll port this to be a class with a proper constructor
+local players_to_use = ...
 
 game.add_component(self, 'terrain')
-powerup_sound = game.add_component(self, 'audio_source', {
-  sound = game.resources.sounds.powerup,
-  volume = 1,
-})
-powerup_sound.play()
+powerup_sound = audio_source(self)
+powerup_sound.sound = game.resources.sounds.powerup
+powerup_sound.volume = 1
+powerup_sound:play()
 
-win_sound = game.add_component(self, 'audio_source', {
-  sound = game.resources.sounds.win,
-  volume = 2,
-})
+win_sound = audio_source(self)
+win_sound.sound = game.resources.sounds.win
+win_sound.volume = 2
 
 checkpoints = { }
 
@@ -61,33 +63,25 @@ function draw()
 end
 
 local orientation = quaternion.from_rotation(vect.j, math.pi/2)
-player1 = game.add_component(self, 'player', {
-  pos = vect(56.5, 0, 45.5),
-  orientation = orientation,
-  color = {0.6, 0.2, 0.8},
-  input_num=0
-})
---print(player1.parent.type)
 
-player2 = game.add_component(self, 'player', {
-  pos = vect(56.5, 0, 45.5),
-  orientation = orientation,
-  color = {0.6, 0.8, 0.2},
-  input_num=1
-})
-
-game.add_component(self, 'enemy', {
-  pos = vect(57.5, 0, 45.5),
-  orientation = orientation
-})
-game.add_component(self, 'enemy', {
-  pos = vect(58.5, 0, 45.5),
-  orientation = orientation
-})
-game.add_component(self, 'enemy', {
-  pos = vect(59.5, 0, 45.5),
-  orientation = orientation
-})
+player_ships = {}
+local next_pos = vect(56.5, 0, 45.5)
+for _, player in ipairs(players_to_use) do
+  if player.is_human then
+    table.insert(player_ships, game.add_component(self, 'player_ship', {
+      pos = next_pos,
+      orientation = orientation,
+      player = player
+    }))
+  else
+    table.insert(player_ships, game.add_component(self, 'enemy', {
+      pos = next_pos,
+      orientation = orientation,
+      player = player
+    }))
+  end
+  next_pos = next_pos + vect(1, 0, 0)
+end
 
 game.add_component(self, 'goat', { pos = vect(70, 0, 50) })
 game.add_component(self, 'goat', { pos = vect(72, 0, 51) })
@@ -103,7 +97,7 @@ end
 function race_over()
   if not reset_countdown then
     reset_countdown = 230
-    win_sound.play()
+    win_sound:play()
   end
 end
 

@@ -1,17 +1,16 @@
+local audio_source = require 'audio_source'
 local COOLDOWN = 6
-local cooldown_left = 180
+--local cooldown_left = 180
+local cooldown_left = 30
 
 local args = ...
 
+local player = args.player
+
 transform = parent.transform
-audio_source = game.add_component(self, 'audio_source')
-if parent.parent.type == 'player' then
-  audio_source.sound = game.resources.sounds.shoot[parent.parent.num+1]
-  audio_source.volume = 0.06
-else
-  audio_source.sound = game.resources.sounds.shoot[math.random(2)]
-  audio_source.volume = 0.02
-end
+shot_sound = audio_source(self)
+shot_sound.sound = game.resources.sounds.shoot[player.number]
+shot_sound.volume = 0.06
 
 function update ()
   if cooldown_left > 0 then
@@ -22,7 +21,7 @@ function update ()
       pos = parent.transform.pos,
       orientation = parent.transform.orientation
     })
-    audio_source.play()
+    shot_sound:play()
     cooldown_left = COOLDOWN
   end
 end

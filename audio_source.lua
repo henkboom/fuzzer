@@ -1,34 +1,34 @@
 local mixer = require 'mixer'
+using 'dokidoki'
 
-local args = ...
-transform = false
-if args and args.transform ~= nil then
-  transform = args.transform
-else
-  transform = parent.transform
-end
-sound = args and args.sound
-volume = args and args.volume or 1
-loop = args and args.loop or false
+local audio_source = class(dokidoki.component)
+audio_source._name = 'audio_source'
 
-local last_played
-
-function play()
-  assert(sound)
-  last_played = sound:play(volume, volume, loop and 0 or 1)
-  mixer.channel_fade_to(last_played, 0, volume)
+function audio_source:_init(parent)
+  self:super(parent)
+  self.sound = false
+  self.volume = 1
+  self.loop = false
+  self._last_played = false
+  self.removed:add_handler(function () self:on_removal() end)
 end
 
-function fade_to(volume)
-  if last_played then
-    mixer.channel_fade_to(last_played, 0.05, volume)
+function audio_source:play()
+  assert(self.sound)
+  self._last_played = self.sound:play(
+    self.volume, self.volume, self.loop and 0 or 1)
+end
+
+function audio_source:fade_to(volume)
+  if self._last_played then
+    mixer.channel_fade_to(self._last_played, 0.05, self.volume)
   end
 end
 
-function on_removal()
-  if loop then
-    if last_played then
-      mixer.channel_stop(last_played)
-    end
+function audio_source:on_removal()
+  if self.loop and self._last_played then
+    mixer.channel_stop(self._last_played)
   end
 end
+
+return audio_source

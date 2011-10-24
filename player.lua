@@ -1,23 +1,20 @@
-local vect = require 'dokidoki.vect'
+local player = class()
+player._name = 'player'
 
-local args = ...
+--local ai_color = {0.80, 0.80, 0.80}
 
-num = args.input_num
-ship = game.add_component(self, 'ship', {
-  input = game.add_component(self, 'player_input', {num = args.input_num}),
-  pos = args.pos,
-  orientation = args.orientation,
-  color = args.color
-})
-transform = ship.transform
+local colors = {
+  {0.33, 0.80, 0.16},
+  {0.23, 0.16, 0.80},
+  {0.80, 0.16, 0.78},
+  {0.80, 0.78, 0.16},
+}
 
-number_display = game.add_component(self, 'number_display', {pnum=args.input_num})
 
-function update()
-  local laps_left = 4 - ship.lap
-  number_display.value = laps_left
-  if laps_left <= 0 then
-    game.race_manager.race_over()
-  end
+function player:_init(number, is_human)
+  self.number = number
+  self.is_human = is_human
+  self.color = colors[number]
 end
 
+return player

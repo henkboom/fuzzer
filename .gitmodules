@@ -1,3 +1,9 @@
 [submodule "dokidoki"]
 	path = dokidoki
 	url = git://github.com/henkboom/dokidoki.git
+[submodule "physics"]
+	path = physics
+	url = git://github.com/henkboom/dokidoki-physics.git
+[submodule "pl"]
+	path = pl
+	url = git://github.com/henkboom/dokidoki-pl.git

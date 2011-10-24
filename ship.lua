@@ -1,8 +1,11 @@
 local vect = require 'dokidoki.vect'
 local quaternion = require 'dokidoki.quaternion'
+local audio_source = require 'audio_source'
+local ship_renderer = require 'ship_renderer'
 
 local args = ...
 input = assert(args.input)
+player = assert(args.player)
 
 -- constants
 
@@ -14,32 +17,33 @@ local SIZE = {0.5, 10, 0.20}
 
 -- subcomponents
 
-transform = game.add_component(self, 'dokidoki.transform', {
-  pos = args.pos,
-  orientation = args.orientation,
-})
-renderer = game.add_component(self, 'ship_renderer', {
-  size=SIZE,
-  color = args.color
-})
-collider = game.add_component(self, 'collider', { size=SIZE })
-ship_shooting = game.add_component(self, 'ship_shooting')
+transform = dokidoki.transform(self)
+transform.pos = args.pos
+transform.orientation = args.orientation
 
-bump_audio_source = game.add_component(self, 'audio_source', {
-  volume = 0.2
-})
-lap_audio_source = game.add_component(self, 'audio_source', {
-  volume = 1,
-  sound = game.resources.sounds.finish_lap
-})
-if parent.type == 'player' then
-  engine_audio_source = game.add_component(self, 'audio_source', {
-    volume = 0,
-    loop = true,
-    sound = game.resources.sounds.engine_loops[parent.num+1]
-  })
+renderer = ship_renderer(self, transform)
+renderer.size = SIZE
+renderer.color = player.color
 
-  engine_audio_source.play()
+collider = game.add_component(self, 'physics.collider', { size=SIZE })
+ship_shooting = game.add_component(self, 'ship_shooting', {player = player})
+
+bump_audio_source = audio_source(self)
+bump_audio_source.volume = 0.2
+
+lap_audio_source = false
+engine_audio_source = false
+if player.is_human then
+  lap_audio_source = audio_source(self)
+  lap_audio_source.volume = 1
+  lap_audio_source.sound = game.resources.sounds.finish_lap
+
+  engine_audio_source = audio_source(self)
+  engine_audio_source.volume = 0
+  engine_audio_source.loop = true
+  engine_audio_source.sound = game.resources.sounds.engine_loops[player.number]
+
+  engine_audio_source:play()
 end
 
 -- behaviour
@@ -50,7 +54,6 @@ local next_checkpoint = 1
 lap = 0
 
 collider.on_collision = function (other, point, normal, depth)
-
   if(other.parent.type == 'checkpoint') then
     reach_checkpoint(other.parent)
   else -- assume we collide with everything else
@@ -63,7 +66,7 @@ collider.on_collision = function (other, point, normal, depth)
       if vect.dot(rel_vel, normal) < 0 then
         if -vect.dot(rel_vel, normal) > 0.1 then
           bump_audio_source.sound = game.resources.sounds.hit_wall[math.random(3)]
-          bump_audio_source.play()
+          bump_audio_source:play()
         end
         rel_vel = rel_vel - 0.6 * vect.project(rel_vel, normal)
         impulse = impulse + rel_vel + other_vel - vel
@@ -114,14 +117,14 @@ function update()
   apply_velocity()
   apply_steering()
 
-  if parent.type == 'player' then
-    engine_audio_source.fade_to(vect.mag(vel)*1.8 + 0.2)
+  if engine_audio_source then
+    engine_audio_source:fade_to(vect.mag(vel)*1.8 + 0.2)
   end
 end
 
 function jitter()
   transform.orientation = transform.orientation *
-    quaternion.from_rotation(vect.j, (math.random() - 0.5) * math.pi/3*1.5)
+    quaternion.from_rotation(vect.j, (math.random() - 0.5) * math.pi/3)
 end
 
 -- checkpoint handling
@@ -134,8 +137,8 @@ function reach_checkpoint(checkpoint)
     if(next_checkpoint > #race_checkpoints) then
       next_checkpoint = 1
       --print('finished lap ' .. lap)
-      if parent.type == 'player' then
-        lap_audio_source.play()
+      if lap_audio_source then
+        lap_audio_source:play()
       end
       lap = lap + 1
     end

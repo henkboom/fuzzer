@@ -1,43 +1,50 @@
+using 'dokidoki'
 local gl = require 'gl'
 
-local args = ...
-local size = args.size
-color = args.color or {0.4, 0.4, 0.4}
+local DEFAULT_COLOR = {0.4, 0.4, 0.4}
 
-local function set_color(b)
+local ship_renderer = class(dokidoki.component)
+ship_renderer._name = 'ship_renderer'
+
+function ship_renderer:_init(parent, transform)
+  self:super(parent)
+  self.size = false
+  self.color = DEFAULT_COLOR
+
+  self.sprite = dokidoki.sprite(self, transform)
+  self.sprite.image = { draw = function () self:_sprite_draw() end }
+end
+
+function ship_renderer:_set_color(b)
+  local color = self.color
   gl.glColor3d(b*color[1], b*color[2], b*color[3])
 end
 
-local image = {
-  draw = function()
-    -- half-width and half-length
-    local hwidth = size[3]
-    local hlength = size[1]
-    local front = 0.1
-    local back = 0.2
+function ship_renderer:_sprite_draw()
+  -- half-width and half-length
+  local hwidth = self.size[3]
+  local hlength = self.size[1]
+  local front = 0.1
+  local back = 0.2
   
-    set_color(0.25)
-    gl.glBegin(gl.GL_QUADS)
-      gl.glVertex3d(-hlength, 0, -hwidth)
-      gl.glVertex3d( hlength, 0, -hwidth)
-      gl.glVertex3d( hlength, 0,  hwidth)
-      gl.glVertex3d(-hlength, 0,  hwidth)
-    gl.glEnd()
+  self:_set_color(0.25)
+  gl.glBegin(gl.GL_QUADS)
+    gl.glVertex3d(-hlength, 0, -hwidth)
+    gl.glVertex3d( hlength, 0, -hwidth)
+    gl.glVertex3d( hlength, 0,  hwidth)
+    gl.glVertex3d(-hlength, 0,  hwidth)
+  gl.glEnd()
 
-    set_color(1)
-    gl.glBegin(gl.GL_LINE_LOOP)
-      gl.glVertex3d(-hlength, back,  -hwidth)
-      gl.glVertex3d( 0,      back,   -hwidth)
-      gl.glVertex3d( hlength, front, -hwidth)
-      gl.glVertex3d( hlength, front,  hwidth)
-      gl.glVertex3d( 0,      back,    hwidth)
-      gl.glVertex3d(-hlength, back,   hwidth)
-    gl.glEnd()
-  end
-}
+  self:_set_color(1)
+  gl.glBegin(gl.GL_LINE_LOOP)
+    gl.glVertex3d(-hlength, back,  -hwidth)
+    gl.glVertex3d( 0,       back,  -hwidth)
+    gl.glVertex3d( hlength, front, -hwidth)
+    gl.glVertex3d( hlength, front,  hwidth)
+    gl.glVertex3d( 0,       back,   hwidth)
+    gl.glVertex3d(-hlength, back,   hwidth)
+  gl.glEnd()
+  gl.glColor3d(1, 1, 1)
+end
 
-game.add_component(self, 'dokidoki.sprite', {
-  transform = game.optional_argument(..., 'transform', parent.transform),
-  image = image
-})
-
+return ship_renderer

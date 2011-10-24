@@ -1,3 +1,4 @@
+using 'dokidoki'
 local gl = require 'gl'
 
 local args = ...
@@ -6,10 +7,10 @@ local h = math.tan(math.pi/6)*math.sqrt(2)/2
 local left = args.left
 local right = args.right
 
-transform = game.add_component(self, 'dokidoki.transform', {
-  pos = args.pos
-})
-collider = game.add_component(self, 'collider', {
+transform = dokidoki.transform(self)
+transform.pos = args.pos
+
+collider = game.add_component(self, 'physics.collider', {
   size = {0.6, 10, 0.6},
   collision_mask = 0
 })

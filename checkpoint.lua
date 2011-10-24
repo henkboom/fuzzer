@@ -1,3 +1,4 @@
+using 'dokidoki'
 local vect = require 'dokidoki.vect'
 local gl = require 'gl'
 
@@ -6,10 +7,10 @@ local args = ...
 local rect = assert(args.rect)
 local size = {(rect[3] - rect[1])/2, 1, (rect[4]-rect[2])/2}
 
-transform = game.add_component(self, 'dokidoki.transform', {
-  pos = vect((rect[3]+rect[1])/2, 0, (rect[4]+rect[2])/2)
-})
-collider = game.add_component(self, 'collider', {size = size})
+transform = dokidoki.transform(self)
+transform.pos = vect((rect[3]+rect[1])/2, 0, (rect[4]+rect[2])/2)
+
+collider = game.add_component(self, 'physics.collider', {size = size})
 --sprite = game.add_component(self, 'dokidoki.sprite', {
 --  image = {
 --    draw = function ()

@@ -49,6 +49,7 @@ end
 -- behaviour
 
 vel = vect.zero
+active = true
 local impulse = vect.zero
 local next_checkpoint = 1
 lap = 0
@@ -110,12 +111,14 @@ local function apply_velocity()
 end
 
 function update()
-  local steering = input and input.steering or 0 
+  if active then
+    local steering = input and input.steering or 0 
 
-  apply_acceleration()
-  damp_velocity()
-  apply_velocity()
-  apply_steering()
+    apply_acceleration()
+    damp_velocity()
+    apply_velocity()
+    apply_steering()
+  end
 
   if engine_audio_source then
     engine_audio_source:fade_to(vect.mag(vel)*1.8 + 0.2)

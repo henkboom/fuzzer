@@ -5,7 +5,7 @@ local vect = require 'dokidoki.vect'
 
 local args = ...
 
-local ratio = 16/9
+local ratio = 4/3
 local height = 5
 
 local transform = dokidoki.transform(self)

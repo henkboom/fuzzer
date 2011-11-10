@@ -37,6 +37,7 @@ function resources:_init(parent)
     powerup = assert(mixer.load_wav('sounds/powerup.wav')),
     win = assert(mixer.load_wav('sounds/win.wav')),
   }
+  self.font = require('dokidoki.default_font').load()
 end
 
 return resources

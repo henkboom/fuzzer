@@ -26,7 +26,8 @@ LUA_SRC += \
     ship.lua \
     ship_renderer.lua \
     ship_shooting.lua \
-    terrain.lua
+    terrain.lua \
+    title_screen.lua
 
 RESOURCES += \
     level.png \

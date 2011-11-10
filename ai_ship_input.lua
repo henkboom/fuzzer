@@ -13,6 +13,5 @@ function preupdate()
 
   acceleration = math.max(0, math.sqrt(vect.dot(forward, to_target)))
   steering = (vect.cross(forward, to_target)[2] > 0) and 1 or -1
-  --shooting = math.random(2) == 1
-  shooting = false
+  shooting = math.random(3) == 1
 end

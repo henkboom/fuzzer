@@ -17,7 +17,7 @@ local game = dokidoki.game(
 
 local audio_source = require 'audio_source'
 local resources = require 'resources'
-local player = require 'player'
+local title_screen = require 'title_screen'
 
 local function init()
   game.keyboard = dokidoki.keyboard(game)
@@ -42,22 +42,24 @@ local function init()
   function game.reset()
     game.race_manager:remove()
   end
+
+  game.title_screen = title_screen(game)
   
-  game:add_handler_for('preupdate', function ()
-    if not game.race_manager or game.race_manager.dead then
-      game.race_manager = dokidoki.retro_component(game, 'race_manager', {
-        player(1, true),
-        player(2, true),
-        player(3, true),
-        player(4, true),
-      })
-    end
-  
-    if glfw.GetJoystickButtons(0, 7)[7] == 1 or
-       glfw.GetJoystickButtons(1, 7)[7] == 1 then
-      game.reset()
-    end
-  end)
+  --game:add_handler_for('preupdate', function ()
+  --  if not game.race_manager or game.race_manager.dead then
+  --    game.race_manager = dokidoki.retro_component(game, 'race_manager', {
+  --      player(1, false),
+  --      player(2, false),
+  --      player(3, false),
+  --      player(4, false),
+  --    })
+  --  end
+  --
+  --  if glfw.GetJoystickButtons(0, 7)[7] == 1 or
+  --     glfw.GetJoystickButtons(1, 7)[7] == 1 then
+  --    game.reset()
+  --  end
+  --end)
 end
 
 --

@@ -21,7 +21,7 @@ end
 
 function audio_source:fade_to(volume)
   if self._last_played then
-    mixer.channel_fade_to(self._last_played, 0.05, self.volume)
+    mixer.channel_fade_to(self._last_played, 0.05, volume)
   end
 end
 

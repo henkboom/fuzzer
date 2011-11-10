@@ -11,7 +11,7 @@ dokidoki.kernel.set_max_frameskip(2)
 
 local game = dokidoki.game(
   {'preupdate', 'update', 'postupdate'},
-  {'predraw', 'draw', '_debugdraw', 'postdraw'})
+  {'predraw', 'opaque_draw', 'draw', '_debugdraw', 'postdraw'})
 
 --
 
@@ -41,6 +41,7 @@ local function init()
   
   function game.reset()
     game.race_manager:remove()
+    game.title_screen = title_screen(game)
   end
 
   game.title_screen = title_screen(game)

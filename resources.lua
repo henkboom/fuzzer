@@ -1,5 +1,6 @@
 using 'dokidoki'
 local mixer = require 'mixer'
+local obj = require 'obj'
 
 local resources = class(dokidoki.component)
 resources._name = 'resources'
@@ -36,8 +37,12 @@ function resources:_init(parent)
     },
     powerup = assert(mixer.load_wav('sounds/powerup.wav')),
     win = assert(mixer.load_wav('sounds/win.wav')),
+    slidenoise = assert(mixer.load_wav('sounds/slidenoise.wav'))
   }
+
   self.font = require('dokidoki.default_font').load()
+
+  self.firsttrack = obj('firsttrack.obj')
 end
 
 return resources

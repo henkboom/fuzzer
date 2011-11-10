@@ -8,7 +8,6 @@ LIBRARIES += \
 LUA_SRC += \
     ai_ship_input.lua \
     audio_source.lua \
-    block.lua \
     camera.lua \
     checkpoint.lua \
     effects.lua \
@@ -17,6 +16,7 @@ LUA_SRC += \
     goat.lua \
     init.lua \
     number_display.lua \
+    obj.lua \
     player.lua \
     player_input.lua \
     player_ship.lua \
@@ -27,11 +27,11 @@ LUA_SRC += \
     ship_renderer.lua \
     ship_shooting.lua \
     terrain.lua \
+    track.lua \
     title_screen.lua
 
 RESOURCES += \
-    level.png \
-    level_checkpoints.lua \
+    firsttrack.obj \
     goat.png \
     numbers.png \
     sounds/finish_lap.wav \
@@ -48,4 +48,5 @@ RESOURCES += \
     sounds/shoot_player_2.wav \
     sounds/win.wav \
     sounds/engine_loop_1.wav \
-    sounds/engine_loop_2.wav
+    sounds/engine_loop_2.wav \
+    sounds/slidenoise.wav

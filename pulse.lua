@@ -18,7 +18,7 @@ transform.pos = args.pos + vel
 transform.orientation = args.orientation
 
 collider = game.add_component(self, 'physics.collider', {
-  size = {1, 0.2, 0.2},
+  collision_shape = physics.box_shape({1, 0.2, 0.2}),
   group_mask = 0
 })
 

@@ -37,25 +37,29 @@ function postupdate()
 end
 
 function predraw ()
+  --height = 50
   kernel.set_ratio(ratio)
 
+  gl.glDepthMask(true) -- TODO GL_TRUE
   gl.glClearColor(0, 0, 0, 0)
-  gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+  gl.glClearDepth(1)
+  gl.glClear(gl.GL_COLOR_BUFFER_BIT + gl.GL_DEPTH_BUFFER_BIT)
 
   gl.glEnable(gl.GL_BLEND)
   gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE)
   gl.glAlphaFunc(gl.GL_GREATER, 0)
   gl.glEnable(gl.GL_ALPHA_TEST)
+  gl.glDepthFunc(gl.GL_LEQUAL)
+  gl.glDepthMask(false) -- TODO GL_FALSE
   gl.glDisable(gl.GL_DEPTH_TEST)
 
   gl.glMatrixMode(gl.GL_PROJECTION)
   gl.glLoadIdentity()
-  gl.glOrtho(-ratio*height, ratio*height, -height, height, 100, -100)
+  gl.glOrtho(-ratio*height, ratio*height, -height, height, -100, 100)
   gl.glMatrixMode(gl.GL_TEXTURE)
   gl.glLoadIdentity()
   gl.glMatrixMode(gl.GL_MODELVIEW)
   gl.glLoadIdentity()
-  --gl.glRotated(math.sin(0.5/math.sqrt(2))*180/math.pi, 1, 0, 0)
   gl.glRotated(30, 1, 0, 0)
   gl.glRotated(45, 0, 1, 0)
   gl.glTranslated(vect.coords(-transform.pos))

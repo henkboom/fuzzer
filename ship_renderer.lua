@@ -21,20 +21,30 @@ function ship_renderer:_set_color(b)
 end
 
 function ship_renderer:_sprite_draw()
-  -- half-width and half-length
-  local hwidth = self.size[3]
+  -- half-length/height/width
   local hlength = self.size[1]
-  local front = 0.1
-  local back = 0.2
-  
-  self:_set_color(0.25)
-  gl.glBegin(gl.GL_QUADS)
-    gl.glVertex3d(-hlength, 0, -hwidth)
-    gl.glVertex3d( hlength, 0, -hwidth)
-    gl.glVertex3d( hlength, 0,  hwidth)
-    gl.glVertex3d(-hlength, 0,  hwidth)
-  gl.glEnd()
+  local hheight = self.size[2]
+  local hwidth = self.size[3]
+  local bottom = -hheight
+  local front = 0
+  local back = hheight
 
+  self:_set_color(0.15)
+  gl.glBegin(gl.GL_QUADS)
+    gl.glVertex3d(-2*hlength, bottom, -4*hwidth)
+    gl.glVertex3d( 2*hlength, bottom, -2*hwidth)
+    gl.glVertex3d( 2*hlength, bottom,  2*hwidth)
+    gl.glVertex3d(-2*hlength, bottom,  4*hwidth)
+  gl.glEnd()
+  
+  self:_set_color(0.20)
+  gl.glBegin(gl.GL_QUADS)
+    gl.glVertex3d(-hlength, bottom, -hwidth)
+    gl.glVertex3d( hlength, bottom, -hwidth)
+    gl.glVertex3d( hlength, bottom,  hwidth)
+    gl.glVertex3d(-hlength, bottom,  hwidth)
+  gl.glEnd()
+  
   self:_set_color(1)
   gl.glBegin(gl.GL_LINE_LOOP)
     gl.glVertex3d(-hlength, back,  -hwidth)
@@ -44,6 +54,7 @@ function ship_renderer:_sprite_draw()
     gl.glVertex3d( 0,       back,   hwidth)
     gl.glVertex3d(-hlength, back,   hwidth)
   gl.glEnd()
+
   gl.glColor3d(1, 1, 1)
 end
 

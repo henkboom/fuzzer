@@ -1,16 +1,31 @@
 using 'dokidoki'
+using 'physics'
 local vect = require 'dokidoki.vect'
 local gl = require 'gl'
 
 local args = ...
 
-local rect = assert(args.rect)
-local size = {(rect[3] - rect[1])/2, 1, (rect[4]-rect[2])/2}
+--local rect = assert(args.rect)
+local mesh = assert(args.mesh)
 
 transform = dokidoki.transform(self)
-transform.pos = vect((rect[3]+rect[1])/2, 0, (rect[4]+rect[2])/2)
+--transform.pos = vect((rect[3]+rect[1])/2, 0, (rect[4]+rect[2])/2)
 
-collider = game.add_component(self, 'physics.collider', {size = size})
+local vertex_count = 0
+center = vect.zero
+for i = 1, #mesh do
+  local face = mesh[i]
+  for j = 1, #face do
+    vertex_count = vertex_count + 1
+    center = center + face[j].position
+  end
+end
+center = center / vertex_count
+
+local shape = physics.triangle_mesh_shape(mesh)
+collider = game.add_component(self, 'physics.collider', {
+  collision_shape = shape
+})
 --sprite = game.add_component(self, 'dokidoki.sprite', {
 --  image = {
 --    draw = function ()
